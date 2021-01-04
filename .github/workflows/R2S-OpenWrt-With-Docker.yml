@@ -1,4 +1,4 @@
-name: R2S-OpenWrt-Without-Docker
+name: R2S-OpenWrt-With-Docker
 
 on:
   schedule:
@@ -8,17 +8,17 @@ on:
 
 jobs:
   
-  Cleanup-Old-Releases:
-    runs-on: ubuntu-20.04
-    if: github.event.repository.owner.id == github.event.sender.id
-    steps:  
-    - name: Delete Older Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.0
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  Cleanup-Old-Releases:
+#    runs-on: ubuntu-20.04
+#    if: github.event.repository.owner.id == github.event.sender.id
+#    steps:  
+#    - name: Delete Older Releases
+#      uses: dev-drprasad/delete-older-releases@v0.2.0
+#      with:
+#        keep_latest: 3
+#        delete_tags: true
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Cleanup-Old-Artifacts:
     runs-on: ubuntu-20.04
@@ -153,7 +153,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.workflow_token }}
+        GITHUB_TOKEN: ${{ secrets.sec_token }}
       with:
         tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
         release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
@@ -164,7 +164,7 @@ jobs:
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.workflow_token }}
+        GITHUB_TOKEN: ${{ secrets.sec_token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         asset_path: ./artifact.zip
