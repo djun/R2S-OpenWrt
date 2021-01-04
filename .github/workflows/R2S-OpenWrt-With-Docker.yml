@@ -106,7 +106,7 @@ jobs:
     - name: Make Config
       run: |
         cd openwrt
-        mv ../SEED/config_no_docker.seed .config
+        mv ../SEED/config_docker.seed .config
         make defconfig
         chmod -R 755 ./
     - name: Make Download
