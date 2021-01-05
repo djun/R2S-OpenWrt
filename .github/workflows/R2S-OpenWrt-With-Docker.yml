@@ -2,7 +2,7 @@ name: R2S-OpenWrt-With-Docker
 
 on:
   schedule:
-    - cron: 5 9 * * 0
+    - cron: 5 9 * * *
   watch:
     types: started
 
@@ -11,17 +11,17 @@ on:
 
 jobs:
   
-#  Cleanup-Old-Releases:
-#    runs-on: ubuntu-20.04
-#    #if: github.event.repository.owner.id == github.event.sender.id
-#    steps:  
-#    - name: Delete Older Releases
-#      uses: dev-drprasad/delete-older-releases@v0.2.0
-#      with:
-#        keep_latest: 3
-#        delete_tags: true
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.sec_token2 }}
+  Cleanup-Old-Releases:
+    runs-on: ubuntu-20.04
+    #if: github.event.repository.owner.id == github.event.sender.id
+    steps:  
+    - name: Delete Older Releases
+      uses: dev-drprasad/delete-older-releases@v0.2.0
+      with:
+        keep_latest: 60
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.sec_token2 }}
 
   Cleanup-Old-Artifacts:
     runs-on: ubuntu-20.04
@@ -33,16 +33,16 @@ jobs:
         token: ${{ github.token }}
         expire-in: 14d
         
-  Cleanup-Workflow-Logs:
-    runs-on: ubuntu-20.04
-    #if: github.event.repository.owner.id == github.event.sender.id
-    steps:
-      - name: Cleanup Workflow Logs
-        uses: ActionsRML/delete-workflow-runs@v1.2.1
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 14
+#   Cleanup-Workflow-Logs:
+#     runs-on: ubuntu-20.04
+#     #if: github.event.repository.owner.id == github.event.sender.id
+#     steps:
+#       - name: Cleanup Workflow Logs
+#         uses: ActionsRML/delete-workflow-runs@v1.2.1
+#         with:
+#           token: ${{ github.token }}
+#           repository: ${{ github.repository }}
+#           retain_days: 14
           
   build:
     runs-on: ubuntu-20.04
@@ -145,7 +145,7 @@ jobs:
         cd openwrt
         cd ..
         zip -r artifact.zip ./artifact/
-        release_tag="R2S-GC404-$(date +%Y-%m-%d)"
+        release_tag="R2S-GC404-Docker-$(date +%Y-%m-%d)"
         echo "##[set-output name=release_tag;]$release_tag"
     - name: Upload Artifact
       uses: actions/upload-artifact@master
